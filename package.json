@@ -1,0 +1,37 @@
+{
+  "name": "my-tapable",
+  "version": "1.0.0",
+  "description": "a sample tapable imple",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx webpack --config ./build.config.js",
+    "build:watch": "npx webpack --config ./build.config.js --watch",
+    "build:demo": "npx webpack",
+    "dev": "npx webpack-dev-server"
+  },
+  "browserslist": [
+    ">10%"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.25.9",
+    "@babel/preset-env": "^7.25.9",
+    "@babel/preset-typescript": "^7.25.9",
+    "@types/tapable": "^2.2.7",
+    "babel-loader": "^9.2.1",
+    "corejs": "^1.0.0",
+    "tapable": "^2.2.1",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^12.0.2",
+    "core-js": "^3.38.1",
+    "html-webpack-plugin": "^5.6.3",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
+  }
+}
