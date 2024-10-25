@@ -1,4 +1,5 @@
 import { SyncHook, AsyncParallelHook } from "lib/my-tapable";
+import { SyncHookType } from "lib/my-tapable/hooks/SyncHook";
 
 const hook = new SyncHook(["arg1", "arg2", "arg3"]);
 

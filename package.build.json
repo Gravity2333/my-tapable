@@ -1,6 +1,6 @@
 {
   "name": "my-tapable",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "一个简单的tapable实现，用法和官方tapable类似",
   "main": "main.js",
   "keywords": [],

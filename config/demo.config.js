@@ -1,18 +1,18 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin")
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
-module.exports =  {
-  target:'web',
+module.exports = {
+  target: "web",
   mode: "development",
   context: path.resolve(__dirname, "../"),
-  entry: './src/index.ts',
+  entry: "./src/index.ts",
   output: {
     filename: "[name].js",
     chunkFilename: "chunk-[name]-[chunkhash:8][ext]",
     path: path.resolve(__dirname, "../demo"),
     clean: true,
-    publicPath: '/demo',
+    publicPath: "/demo",
     library: {
       type: "module",
     },
@@ -57,11 +57,11 @@ module.exports =  {
     }),
     new CopyWebpackPlugin({
       patterns: [
-          {
-              from: './@types',
-              to: './lib/'
-          }
-      ]
-  })
+        {
+          from: "./@types",
+          to: "./lib/",
+        },
+      ],
+    }),
   ],
-}
+};
