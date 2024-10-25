@@ -1,84 +1,67 @@
-// import { AsyncSeriesWaterfallHook } from "tapable";
-import { AsyncSeriesWaterfallHook } from "lib/my-tapable";
-const asyncSeriesWaterfallHook = new AsyncSeriesWaterfallHook([
-  "arg1",
-  "arg2",
-  "arg3",
-]);
+import { SyncHook, AsyncParallelHook } from "lib/my-tapable";
 
-asyncSeriesWaterfallHook.tap(
-  "asyncSeriesWaterfallHook tap 1",
-  (arg1, arg2, arg3) => {
-    console.log("asyncSeriesWaterfallHook tap 1", arg1, arg2, arg3);
-    return 22;
-  }
-);
+const hook = new SyncHook(["arg1", "arg2", "arg3"]);
 
-asyncSeriesWaterfallHook.tapAsync(
-  "asyncSeriesWaterfallHook tapAsync 1",
-  (arg1, arg2, arg3, done) => {
-    console.log("asyncSeriesWaterfallHook tapAsync 1", arg1, arg2, arg3);
-    done();
-  }
-);
-
-asyncSeriesWaterfallHook.tapAsync(
-  "asyncSeriesWaterfallHook tapAsync 2",
-  (arg1, arg2, arg3, done) => {
-    console.log("asyncSeriesWaterfallHook tapAsync 2", arg1, arg2, arg3);
-
+async function searchGoogleMap(source: string, target: string, routesList: []) {
+  return await new Promise((resolve) => {
     setTimeout(() => {
-      done(undefined, 44);
+      resolve("CACULATED ROUTE");
     }, 1000);
-  }
-);
-
-asyncSeriesWaterfallHook.tapPromise(
-  "asyncSeriesWaterfallHook tapPromise 1",
-  (arg1, arg2, arg3) => {
-    console.log(
-      "asyncSeriesWaterfallHook tapPromise 1 outer",
-      arg1,
-      arg2,
-      arg3
-    );
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        console.log(
-          "asyncSeriesWaterfallHook tapPromise 1 inner",
-          arg1,
-          arg2,
-          arg3
-        );
-        resolve("tap promise res");
-      }, 4000);
-    });
-  }
-);
-
-// asyncSeriesWaterfallHook.tapPromise('asyncSeriesWaterfallHook tapPromise 1',(arg1,arg2,arg3) => {
-//     console.log('asyncSeriesWaterfallHook tapPromise 1 outer',arg1,arg2,arg3)
-//     return new Promise(resolve=>{
-//         console.log('asyncSeriesWaterfallHook tapPromise 1',arg1,arg2,arg3)
-//        setTimeout(() => {
-//         resolve('tap promise res')
-//        }, 10000);
-//     })
-// })
-// console.time('test')
-// asyncSeriesWaterfallHook.callAsync(1,2,3,(err,val)=>{
-//     console.log('end',err,'val',val)
-//     console.timeEnd('test')
-// })
-
-console.time("test2");
-asyncSeriesWaterfallHook
-  .promise(1, 2)
-  .then((val) => {
-    console.log("success", val);
-    console.timeEnd("test2");
-  })
-  .catch((err) => {
-    console.log("err", err);
-    console.timeEnd("test2");
   });
+}
+
+interface CarType {
+  hooks: {
+    accelerate: SyncHookType;
+    brake: SyncHookType;
+    calculateRoutes: AsyncParallelHook;
+  };
+}
+
+class Car implements CarType {
+  public hooks = {
+    accelerate: new SyncHook(["newSpeed"]),
+    brake: new SyncHook([]),
+    calculateRoutes: new AsyncParallelHook(["source", "target", "routesList"]),
+  };
+  constructor() {
+    this.hooks.brake.tap("BRAKE", () => {
+      console.log("BREAK THE CAR");
+    });
+
+    this.hooks.accelerate.tap("ACCELEATR", (newSpeed) => {
+      console.log("ACCELERATE TO" + newSpeed);
+    });
+
+    this.hooks.calculateRoutes.tapPromise(
+      "FIND ROUTE",
+      (source, target, routesList) =>
+        searchGoogleMap(source, target, routesList)
+    );
+  }
+
+  brake() {
+    this.hooks.brake.call();
+  }
+
+  accelerate(newSpeeed) {
+    this.hooks.accelerate.call(newSpeeed);
+  }
+
+  calculateRoutes(source, target, routesList) {
+    this.hooks.calculateRoutes.callAsync(
+      source,
+      target,
+      routesList,
+      (result) => {
+        console.log(result);
+      }
+    );
+  }
+}
+
+const car = new Car();
+
+car.calculateRoutes("pos1", "pos2", []);
+car.accelerate(120);
+car.brake();

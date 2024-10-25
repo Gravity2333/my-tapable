@@ -5,14 +5,14 @@ const CopyWebpackPlugin = require("copy-webpack-plugin")
 module.exports =  {
   target:'web',
   mode: "development",
-  context: path.resolve(__dirname, "./"),
+  context: path.resolve(__dirname, "../"),
   entry: './src/index.ts',
   output: {
     filename: "[name].js",
     chunkFilename: "chunk-[name]-[chunkhash:8][ext]",
-    path: path.resolve(__dirname, "./demo"),
+    path: path.resolve(__dirname, "../demo"),
     clean: true,
-    publicPath: '/',
+    publicPath: '/demo',
     library: {
       type: "module",
     },
@@ -22,8 +22,8 @@ module.exports =  {
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      lib: path.resolve(__dirname, "./lib"),
+      "@": path.resolve(__dirname, "../src"),
+      lib: path.resolve(__dirname, "../lib"),
     },
     extensions: [".ts", ".js"],
     descriptionFiles: ["package.json"],

@@ -1,0 +1,13 @@
+{
+  "name": "my-tapable",
+  "version": "1.0.0",
+  "description": "a sample tapable imple",
+  "main": "main.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}

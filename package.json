@@ -1,14 +1,14 @@
 {
-  "name": "my-tapable",
+  "name": "my-tapabl-dev",
   "version": "1.0.0",
   "description": "a sample tapable imple",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx webpack --config ./build.config.js",
-    "build:watch": "npx webpack --config ./build.config.js --watch",
-    "build:demo": "npx webpack",
-    "dev": "npx webpack-dev-server"
+    "build": "npx webpack --config ./config/build.config.js",
+    "build:watch": "npx webpack --config ./config/build.config.js --watch",
+    "build:demo": "npx webpack --config ./config/demo.config.js",
+    "dev": "npx webpack-dev-server  --config ./config/demo.config.js"
   },
   "browserslist": [
     ">10%"

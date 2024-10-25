@@ -5,12 +5,12 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 module.exports = [
   {
     mode: "production",
-    context: path.resolve(__dirname, "./"),
+    context: path.resolve(__dirname, "../"),
     entry: "./lib/my-tapable/index.ts",
     output: {
       filename: "[name].js",
       chunkFilename: "chunk-[name]-[chunkhash:8][ext]",
-      path: path.resolve(__dirname, "./dist"),
+      path: path.resolve(__dirname, "../dist"),
       clean: true,
       library: {
         type: "module",
@@ -45,6 +45,14 @@ module.exports = [
           {
             from: "./@types",
             to: "./",
+          },
+          {
+            from: "./Readme.md",
+            to: "./",
+          },
+          {
+            from: "./package.build.json",
+            to: "./package.json",
           },
         ],
       }),
