@@ -28,11 +28,11 @@ export class AsyncParallelBailHook implements AsyncParallelBailHookType {
 
   tapAsync(eventName, callback) {
     this.asyncEvents.push((...args: any[]) => {
-      return new Promise((resolve,reject) => {
+      return new Promise((resolve, reject) => {
         // AsyncParallelHook 不接受第二个成功result值
         callback(...args, (err: any, result?: any) => {
           if (err) {
-            reject(err)
+            reject(err);
           }
           resolve(result);
         });
@@ -64,24 +64,63 @@ export class AsyncParallelBailHook implements AsyncParallelBailHookType {
       args.slice(0, this.args.length),
       this.args.length
     );
-    let settledAsyncEventCnt = 0;
+    let pending = true;
+    let handleResuleFn = null;
+    const finishedStatusList: boolean[] = new Array(
+      this.asyncEvents.length
+    ).fill(false);
+    let endPos =
+      finishedStatusList.length === 0 ? 0 : finishedStatusList.length - 1;
     return new Promise((resolve, reject) => {
-      for (const asyncEvent of this.asyncEvents) {
-        asyncEvent(...inputArgs)
+      for (let i = 0; i < this.asyncEvents.length; i++) {
+        this.asyncEvents[i](...inputArgs)
           .then((res) => {
+            if (!pending) return;
             if (res !== undefined) {
-              // bail推出
-              resolve(res);
-            } else {
-              settledAsyncEventCnt++;
-              if (settledAsyncEventCnt >= this.asyncEvents.length) {
-                // 正常退出
-                resolve(undefined);
+              if (!handleResuleFn) {
+                handleResuleFn = () => {
+                  resolve(res);
+                  pending = false;
+                };
+                endPos = i;
               }
             }
+            finishedStatusList[i] = true;
+
+            for (
+              let prevFindIndex = 0;
+              prevFindIndex < endPos;
+              prevFindIndex++
+            ) {
+              if (false === finishedStatusList[prevFindIndex]) {
+                return;
+              }
+            }
+
+            handleResuleFn();
           })
           .catch((err) => {
-            reject(err);
+            if (!pending) return;
+            if (!handleResuleFn) {
+              handleResuleFn = () => {
+                reject(err);
+                pending = false;
+              };
+              endPos = i;
+            }
+            finishedStatusList[i] = true;
+
+            for (
+              let prevFindIndex = 0;
+              prevFindIndex < endPos;
+              prevFindIndex++
+            ) {
+              if (false === finishedStatusList[prevFindIndex]) {
+                return;
+              }
+            }
+
+            handleResuleFn();
           });
       }
     });

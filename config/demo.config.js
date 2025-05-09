@@ -12,7 +12,7 @@ module.exports = {
     chunkFilename: "chunk-[name]-[chunkhash:8][ext]",
     path: path.resolve(__dirname, "../demo"),
     clean: true,
-    publicPath: "/demo",
+    // publicPath: "/demo",
     library: {
       type: "module",
     },
